@@ -2,5 +2,4 @@ employee_base = {'Мария Никитина': 'менеджер', 'Егор С
 
 for position in employee_base.values():
     print(position)
-
-
+~``
