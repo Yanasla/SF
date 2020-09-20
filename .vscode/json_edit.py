@@ -80,3 +80,4 @@ for client_id in report_clients: #отбор уникальных(неповто
     if client_id not in uniq_clients_report: 
         uniq_clients_report.append(client_id)
 print(len(uniq_clients_report))
+print(sorted(uniq_clients_report))
