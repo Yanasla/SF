@@ -14,3 +14,4 @@ print(string[::-1])
 
 for i in range(1, len(string)+1):
     print(string[-i], end = '')
+info = 'Фамилия: Иванова, имя: Агафья, e-mail: agafiya@ivanova.me'
