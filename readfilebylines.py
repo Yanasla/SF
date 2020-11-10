@@ -25,12 +25,35 @@ for item in res_list:
     print(item)
 print(len(res_list)-1)'''
 
-LS = 0
+'''LS = 0
+S = 0
 for line in f:
     info = line.split(',')
     lunch = info[3][1:-1]
-    if lunch == 'standart':
+    if lunch == 'standard':
         LS += 1
-    
-print('Полноценный обед получили: {}.format(LS)')
+    elif lunch == 'free/reduced':
+        S += 1
 
+print('Полноценный обед получили: {}'.format(LS))
+print(LS/(LS + S))'''
+
+'''c = 0
+for line in f:
+    info = line.split(',')
+    ethno = info[1][1:-1]
+    if ethno == 'group C':
+        c += 1
+print('Этническая группа С": {}'.format(c))
+print(c)'''
+
+res_list = []
+for line in f:
+    info = line.split(',')
+    eg = info[1][1:-1]
+    if eg not in res_list: 
+        res_list.append(eg)
+print("Unique elements of the list using append():n")    
+for item in res_list: 
+    print(item)
+print(len(res_list)-1)
