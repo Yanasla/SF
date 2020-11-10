@@ -1,0 +1,75 @@
+using System;
+using System.Collections.Generic; using System.Linq;
+using System.Text; using RestSharp;
+using WindowsFormsApp2.database; using System.Globalization;
+
+namespace WindowsFormsApp2
+{
+class IrequesttoKness
+{
+public static void LoadHttpPageWithBasicAuthentication(string login, string password, RestClient url)
+{
+var client = url;
+var request = new RestRequest(Method.GET); request.AddHeader("Cache-Control", "no-cache");
+string credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes(login + ":" + password)); request.AddHeader("Authorization", "Basic" + credentials);
+request.AddHeader("Content-Type", "application/x-www-form-urlencoded"); IRestResponse response = client.Execute(request);
+var html = response.Content; Console.WriteLine(html); Char delimiter = ',';
+string[] substrings = html.Split(delimiter);
+var CurrentDateTime = DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+string[] datatodatabase = { CurrentDateTime, substrings[5], substrings[11], substrings[13], substrings[14], substrings[19], substrings[20], substrings[21] };
+var DateTimeCR = DateTime.ParseExact(datatodatabase[0], "dd.MM.yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+var DCVoltaGE = double.Parse(datatodatabase[1], CultureInfo.InvariantCulture);
+var GridconnectedPowER = double.Parse(datatodatabase[2], CultureInfo.InvariantCulture); var ACVoltaGe = double.Parse(datatodatabase[3], CultureInfo.InvariantCulture);
+var ACCurreNT = double.Parse(datatodatabase[4], CultureInfo.InvariantCulture); var BusVoltaGE = double.Parse(datatodatabase[5], CultureInfo.InvariantCulture);
+var DeviceTemperatuRE = double.Parse(datatodatabase[6], CultureInfo.InvariantCulture); var CO2emissionreductiON = double.Parse(datatodatabase[7], CultureInfo.InvariantCulture); var models = new List<MeasuredDataContext>();
+models.Add(new MeasuredDataContext( DateTimeCR,
+DCVoltaGE, GridconnectedPowER, ACVoltaGe, ACCurreNT, BusVoltaGE, DeviceTemperatuRE, CO2emissionreductiON
+));
+using (var db = new ForecastContext())
+{
+var meteoDatas = models.Select(d => new MeteoData()
+{
+CurrentDateTime = d.currentDateTime, DCVoltage = d.dCVoltage, GridconnectedPower = d.gridconnectedPower, ACVoltage = d.aCVoltage,
+ 
+
+ACCurrent = d.aCCurrent, BusVoltage = d.busVoltage,
+DeviceTemperature = d.deviceTemperature, CO2emissionreduction = d.cO2emissionreduction
+}).ToList();
+foreach (var data in meteoDatas)
+{
+if (!db.MeteoDatas.Any(e => e.CurrentDateTime == data.CurrentDateTime))
+{
+db.MeteoDatas.Add(data);
+}
+}
+if (meteoDatas.Any())
+{
+var firstDate = meteoDatas.First().CurrentDateTime.Date; var lastDate = meteoDatas.Last().CurrentDateTime.Date; db.SaveChanges();
+}
+}
+}
+}
+}
+using System;
+using System.ComponentModel.DataAnnotations; using System.Globalization;
+
+
+namespace WindowsFormsApp2
+{
+public class MeasuredDataContext
+{
+public MeasuredDataContext( DateTime CurrentDateTime, double DCVoltage,
+double GridconnectedPower, double ACVoltage,
+double ACCurrent, double BusVoltage,
+double DeviceTemperature, double CO2emissionreduction)
+{
+currentDateTime = CurrentDateTime; dCVoltage = DCVoltage; gridconnectedPower = GridconnectedPower; aCVoltage = ACVoltage;
+aCCurrent = ACCurrent; busVoltage = BusVoltage;
+deviceTemperature = DeviceTemperature; cO2emissionreduction = CO2emissionreduction;
+}
+public DateTime currentDateTime { get; set; } public double dCVoltage { get; set; }
+public double gridconnectedPower { get; set; } public double aCVoltage { get; set; }
+public double aCCurrent { get; set; } public double busVoltage { get; set; }
+public double deviceTemperature { get; set; } public double cO2emissionreduction { get; set; }
+}
+}
