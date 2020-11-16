@@ -17,13 +17,6 @@ def count_cost(product):
 # Попросим функцию посчитать стоимость апельсина    
 orange_cost = count_cost("orange")
 
-def square(x):
-    return x**2
-
-square_result = square(20)
-
-print(square_result)
-
 # Дополните аргументы и код функции
 def sum_2(x, y):
     result = x + y
