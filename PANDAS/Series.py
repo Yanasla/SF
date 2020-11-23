@@ -12,3 +12,4 @@ print(data.loc[["Первый", "Третий"]])
 data = pd.Series(list(range(10, 1001)))
 print(data.loc[10] + data.loc[23] - data.loc[245] + data.iloc[122])
 print(data)
+
